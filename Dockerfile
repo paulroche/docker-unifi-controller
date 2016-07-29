@@ -17,7 +17,10 @@ ADD ./100-ubnt.list /etc/apt/sources.list.d/100-ubnt.list
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10 && \
     apt-get update -q -y && \
-    apt-get install -q -y mongodb-server unifi
+    apt-get install -q -y mongodb-server
+
+ADD http://dl.ubnt.com/unifi/5.0.7/unifi_sysvinit_all.deb /var/cache/apt/archives/unifi_sysvinit_all.deb
+RUN dpkg -i /var/cache/apt/archives/unifi_sysvinit_all.deb; apt-get install -f -q -y && rm -f /var/cache/apt/archives/unifi_sysvinit_all.deb
 
 VOLUME /usr/lib/unifi/data
 EXPOSE  8443 8880 8080 27117
