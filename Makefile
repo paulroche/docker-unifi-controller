@@ -1,33 +1,21 @@
-USER = mhorbul
+USER = dreamisle.ca
 NAME = unifi-controller
-#REGISTRY = registry.rednut.net/
 REGISTRY = 
 REPO = $(REGISTRY)$(USER)/$(NAME)
-VERSION = latest
+VERSION = 5.0.7
 
-
-LVOL = /docker/unifi/data
+LVOL = /mediabox/docker/unifi
 RVOL = /usr/lib/unifi/data
-
-
 
 .PHONY: all build test tag_latest release ssh
 
-all: build tag_latest push
-
-push: push_latest
-push_latest:
-	docker push $(REPO):latest
-
+all: build tag_latest
 
 build:
 	docker build -t="$(REPO):$(VERSION)" --rm --no-cache .
 
-
-
-
 tag_latest:
-	docker tag -f $(REPO):$(VERSION) $(REPO):latest
+	docker tag $(REPO):$(VERSION) $(REPO):latest
 
 release: test tag_latest
 	@if ! docker images $(REPO) | awk '{ print $$2 }' | grep -q -F $(VERSION); then echo "$(REPO) version $(VERSION) is not yet built. Please run 'make build'"; false; fi
@@ -41,11 +29,11 @@ rm:
 # 0.0.0:8080->8080/tcp, 0.0.0.0:8443->8443/tcp, 0.0.0.0:8880->8880/tcp, 0.0.0.0:2222->22/tcp, 0.0.0.0:37117->27117/tcp
 run: rm 
 	docker run -d \
+			-p 8080:8080 \
                         -p 8443:8443 \
 			-p 8880:8880 \
-			-p 37117:27117 \
-			-p 8081:8080 \
-                        -v /docker/unifi/data:/usr/lib/unifi/data \
+			-p 27117:27117 \
+                        -v /mediabox/docker/unifi:/usr/lib/unifi/data \
                         --name=$(NAME) \
 			$(REPO):latest
 
