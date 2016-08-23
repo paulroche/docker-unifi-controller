@@ -10,22 +10,10 @@ For a quick start use the docker hub method, for access to the source, built it 
 
 
 
-### pull from docker hub
-
-
-```	
-	docker pull rednut/unifi-controller
-```
-
-(see instructions below for running it)
-
-
-
-
 ### building docker image
 
 ```
-git clone https://github.com/rednut/docker-unifi-controller.git 
+git clone https://github.com/paulroche/docker-unifi-controller.git
 cd docker-unifi-controller
 make
 ```
@@ -37,9 +25,9 @@ make
 
 ```
     docker run -d \
-            -p 8080:8080 -p 8443:8443 -p 8880:8880 -p 37117:27117 \
+            -p 8080:8080 -p 8443:8443 -p 8880:8880 -p 27117:27117 \
             -v /srv/data/apps/docker/unifi/data:/usr/lib/unifi/data \
-            --name unifi rednut/unifi-controller
+            --name unifi dreamisle.ca/unifi-controller
 ```
 
 
@@ -89,9 +77,9 @@ To launch a container using the image created earlier:
 
 ``` 
 	docker run -d \
-			-p 8080:8080 -p 8443:8443 -p 8880:8880 -p 37117:27117 \
+			-p 8080:8080 -p 8443:8443 -p 8880:8880 -p 27117:27117 \
 			-v /srv/data/apps/docker/unifi/data:/usr/lib/unifi/data \
-			--name unifi rednut/unifi-controller
+			--name unifi dreamisle.ca/unifi-controller
 ```
 
 
