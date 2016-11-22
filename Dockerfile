@@ -21,7 +21,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 && \
 RUN mkdir -p /var/log/supervisor /usr/lib/unifi/data && \
     touch /usr/lib/unifi/data/.unifidatadir
 
-ADD http://dl.ubnt.com/unifi/5.0.7/unifi_sysvinit_all.deb /var/cache/apt/archives/unifi_sysvinit_all.deb
+ADD https://www.ubnt.com/downloads/unifi/5.2.9/unifi_sysvinit_all.deb /var/cache/apt/archives/unifi_sysvinit_all.deb
 RUN dpkg -i /var/cache/apt/archives/unifi_sysvinit_all.deb; apt-get install -f -q -y && rm -f /var/cache/apt/archives/unifi_sysvinit_all.deb
 
 WORKDIR /usr/lib/unifi
