@@ -4,6 +4,13 @@
 #
 FROM ubuntu
 ENV DEBIAN_FRONTEND noninteractive
+ENV BASEDIR=/usr/lib/unifi \
+  DATADIR=/var/lib/unifi \
+  RUNDIR=/var/run/unifi \
+  LOGDIR=/var/log/unifi \
+  JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
+  JVM_MAX_HEAP_SIZE=1024M \
+  JVM_INIT_HEAP_SIZE=
 
 # add unifi and mongo repo
 COPY ./100-ubnt.list /etc/apt/sources.list.d/100-ubnt.list
@@ -16,13 +23,11 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 && \
     apt-get install -q -y binutils \
 			  jsvc \
 			  mongodb-server \
-			  openjdk-8-jre-headless
+			  openjdk-8-jre-headless \
+                          wget
 
 RUN mkdir -p /var/log/supervisor /usr/lib/unifi/data && \
     touch /usr/lib/unifi/data/.unifidatadir
 
-ADD https://www.ubnt.com/downloads/unifi/5.2.9/unifi_sysvinit_all.deb /var/cache/apt/archives/unifi_sysvinit_all.deb
-RUN dpkg -i /var/cache/apt/archives/unifi_sysvinit_all.deb; apt-get install -f -q -y && rm -f /var/cache/apt/archives/unifi_sysvinit_all.deb
-
-WORKDIR /usr/lib/unifi
-CMD ["java", "-Xmx256M", "-jar", "/usr/lib/unifi/lib/ace.jar", "start"]
+COPY docker-entrypoint.sh /
+CMD ["/docker-entrypoint.sh"]
