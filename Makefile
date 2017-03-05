@@ -2,7 +2,7 @@ USER = dreamisle.ca
 NAME = unifi-controller
 REGISTRY = 
 REPO = $(REGISTRY)$(USER)/$(NAME)
-VERSION = 5.2.9
+VERSION = 5.4.11
 
 LVOL = /mediabox/docker/unifi
 RVOL = /usr/lib/unifi/data
@@ -35,7 +35,8 @@ run: rm
 			-p 27117:27117 \
                         -v /mediabox/docker/unifi:/usr/lib/unifi/data \
                         --name=$(NAME) \
-			$(REPO):latest
+			-e UNIFI_VERSION=$(VERSION) \
+			$(REPO):$(VERSION)
 
 
 ip:
