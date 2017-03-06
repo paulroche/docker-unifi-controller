@@ -1,7 +1,24 @@
 #!/usr/bin/env sh
 
-wget -O /tmp/unifi_sysvinit_all.deb https://www.ubnt.com/downloads/unifi/${UNIFI_VERSION}/unifi_sysvinit_all.deb
-dpkg -i /tmp/unifi_sysvinit_all.deb; apt-get install -f -q -y && rm -f /tmp/unifi_sysvinit_all.deb
+DPKG=$(which dpkg)
+WGET=$(which wget)
+
+ARCHIVE=/tmp/unifi
+CURRENT="${ARCHIVE}/unifi_${UNIFI_VERSION}.deb"
+
+if [ ! -d ${ARCHIVE} ]; then
+  mkdir -p ${ARCHIVE}
+fi
+
+#INSTALLED=$(${DPKG} -s unifi | awk '/Version/ {split($2, ver, "-") ; print ver[1]}')
+if [ ! -f ${CURRENT} ] ; then
+  echo "downloading $UNIFI_VERSION"
+  ${WGET} -O ${CURRENT} https://www.ubnt.com/downloads/unifi/${UNIFI_VERSION}/unifi_sysvinit_all.deb
+  ${DPKG} -i ${CURRENT} ; apt-get install -f -q -y && rm -rf /var/cache/apt/archives/*
+else
+  echo "skipping download"
+fi
+
 
 cd /usr/lib/unifi
 
