@@ -1,8 +1,5 @@
-# build docker image to run the unifi controller
-#
-# the unifi contoller is used to admin ubunquty wifi access points
-#
-FROM ubuntu
+FROM ubuntu:xenial
+
 ENV DEBIAN_FRONTEND noninteractive
 ENV BASEDIR=/usr/lib/unifi \
   DATADIR=/var/lib/unifi \
@@ -26,8 +23,9 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv C0A52C50 && \
 			  openjdk-8-jre-headless \
                           wget
 
-RUN mkdir -p /var/log/supervisor /usr/lib/unifi/data && \
+RUN mkdir -p /usr/lib/unifi/data && \
     touch /usr/lib/unifi/data/.unifidatadir
 
 COPY docker-entrypoint.sh /
+
 CMD ["/docker-entrypoint.sh"]
