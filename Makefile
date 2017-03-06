@@ -4,7 +4,7 @@ REGISTRY =
 REPO = $(REGISTRY)$(USER)/$(NAME)
 VERSION = 5.4.11
 
-LVOL = /mediabox/docker/unifi
+LVOL = /docker/unifi
 RVOL = /usr/lib/unifi/data
 
 .PHONY: all build test tag_latest release ssh
@@ -12,7 +12,7 @@ RVOL = /usr/lib/unifi/data
 all: build tag_latest
 
 build:
-	docker build -t="$(REPO):$(VERSION)" --rm --no-cache .
+	docker build -t="$(REPO):$(VERSION)" --rm .
 
 tag_latest:
 	docker tag $(REPO):$(VERSION) $(REPO):latest
@@ -26,15 +26,16 @@ release: test tag_latest
 rm:
 	docker stop $(NAME) || echo "container not running yet" && docker rm $(NAME) || echo "no container count yet"
 
-# 0.0.0:8080->8080/tcp, 0.0.0.0:8443->8443/tcp, 0.0.0.0:8880->8880/tcp, 0.0.0.0:2222->22/tcp, 0.0.0.0:37117->27117/tcp
 run: rm 
 	docker run -d \
+			-p 3478:3478/udp \
+			-p 6789:6789 \
 			-p 8080:8080 \
-                        -p 8443:8443 \
+			-p 8443:8443 \
+			-p 8843:8843 \
 			-p 8880:8880 \
-			-p 27117:27117 \
-                        -v /mediabox/docker/unifi:/usr/lib/unifi/data \
-                        --name=$(NAME) \
+			-v $(LVOL):$(RVOL) \
+			--name=$(NAME) \
 			-e UNIFI_VERSION=$(VERSION) \
 			$(REPO):$(VERSION)
 
